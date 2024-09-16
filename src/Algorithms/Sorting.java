@@ -2,6 +2,7 @@
  * Selection Sort
  * Bubble Sort
  * Insertion Sort
+ * Merge Sort
 */
 
 package Algorithms;
@@ -68,6 +69,102 @@ public class Sorting {
         ob.printArray(ar);
     }
 
+
+    //* Merge Sort */
+    void mergeSort(int[] ar) {
+        mergeDivide(ar, 0, ar.length-1);
+        System.out.print("Merge Sort: ");
+        ob.printArray(ar);
+
+    }
+
+    void mergeDivide(int[] ar, int first, int last) {
+        if(first < last) {
+           int mid = (first + last) / 2;
+           
+           mergeDivide(ar, first, mid);
+           mergeDivide(ar, mid+1, last);
+           ob.mergeConquer(ar, first, mid, last);
+        }
+    }
+
+    void mergeConquer(int[] ar, int first, int mid, int last) {
+        //* 1. Create 2 Arrays : first to mid & mid+1 to last
+        int m = mid - first + 1, n = last - mid;
+        int[] firstArr = new int[m], secondArr = new int[n];
+
+        //* 2. Copy Data in the 2 different arrays.
+        for(int i=0, j=0; i<m || j<n; i++, j++) {
+            if(i<m) {
+                firstArr[i] = ar[first + i];    // first to mid
+            }
+            if(j<n) {
+                secondArr[j] = ar[mid + 1 + j]; // mid+1 to last
+            }
+        }
+
+        //* 2. Compare and Sort array.
+        int i=0, j=0, k=first; 
+        while(i<m && j<n) {
+            if(firstArr[i] < secondArr[j]) {
+                ar[k] = firstArr[i];
+                i++; 
+                k++;
+            } else {
+                ar[k] = secondArr[j];
+                j++;
+                k++;
+            }
+        }
+
+        //* If any elements in the arrays left
+        while(i<m) {
+            ar[k]=firstArr[i];
+            i++;
+            k++;
+        }
+        while(j<n) {
+            ar[k]=firstArr[j];
+            j++;
+            k++;
+        }
+    }
+
+    //* Quick Sort */
+    void quickSort(int[] ar) {
+        quickDivide(ar, 0, ar.length-1);
+        System.out.println("Quick Sort: ");
+        ob.printArray(ar);
+    }
+    void quickDivide(int[] ar, int first, int last) {
+        if (first < last) {
+            int pivotIndex = ob.partition(ar, first, last);
+            quickDivide(ar, first, pivotIndex - 1);
+            quickDivide(ar, pivotIndex + 1, last);
+        }
+    }
+
+    int partition(int arr[], int first, int last) {
+        int pivot = arr[last], pIndex = first, temp; // pIndex = pivotIndex
+        //pivot = always smallest or largest then it is worst case. array is in descending and ascending order. 
+		for (int i = first; i<last; i++) { // last is pivot itself 
+            if (arr[i] < pivot) { // motive = pivot se chhote sb aage ar bade sb last me. (Exact order ni chahiye).
+                // swap arr[pIndex, arr[i]) 
+                temp = arr[pIndex]; 
+                arr[pIndex] = arr[i]; 
+                arr[i] = temp;
+				pIndex++;
+            } 
+        }
+		
+		//set pivot position = smaller < pivot < larger
+		temp = arr[pIndex];
+        arr[pIndex] = arr[last]; 
+        arr[last] = temp; 
+  
+        return pIndex;	// returning appropriate position of pivot. 
+    }
+
     public static void main(String[] args) {
         // Scanner sc = new Scanner(System.in);
         
@@ -80,7 +177,7 @@ public class Sorting {
         //     arr[i] = sc.nextInt();
         // }
 
-        int[] arr = {4, 1, 2, 3, 0};
+        int[] arr = {4, 1, 3, 2, 0};
         
         System.out.print("Given Array: ");
         for(int item: arr) {
@@ -91,5 +188,8 @@ public class Sorting {
         // ob.selectionSort(arr);
         // ob.bubbleSort(arr);
         // ob.insertionSort(arr);
+        
+        // ob.mergeSort(arr);
+        ob.quickSort(arr);
     }
 }
